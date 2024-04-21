@@ -1,3 +1,12 @@
+/*
+Project     : Library System
+Author      : Hamid Maddi
+Created on  : 04/01/2024
+Updated by  : Hamid Mddi
+Updated on  : 04/21/24
+Description : This is the Patron Class for the Library System.
+*/
+
 import java.io.Serializable;
 import java.io.File;
 import java.io.FileOutputStream;

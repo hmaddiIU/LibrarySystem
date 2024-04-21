@@ -7,8 +7,11 @@ Updated on  : 04/21/24
 Description : This is the Patron Class for the Library System.
 */
 
-public class Patron {
+import java.io.Serializable;
+
+public class Patron implements Serializable {
 	// Attributes
+	private static final long serialVersionUID = 1L;
 	private int patronID;
 	private String name;
 	private String phone;
