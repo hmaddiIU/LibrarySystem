@@ -1,12 +1,16 @@
 /*
  * Project: Library System
- * Author: Belmir Husejinovic
- * Created on: 4/7/24
+ * Author     : Belmir Husejinovic
+ * Created on : 4/7/24
+ * Updated by : Hamid Maddi
+ * Updated on : 04/21/24
  * Description: This class will be used to represent a book in the library system.
  */
+import java.io.Serializable;
 
-public class Book {
+public class Book implements Serializable {
     // Attributes
+    private static final long serialVersionUID = 2L;
     private int bookId;
     private String title;
     private String author;

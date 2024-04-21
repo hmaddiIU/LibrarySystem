@@ -5,11 +5,12 @@ Created on  : 04/06/2024
 Description : This class will be used to manipulate transactions in the library system. 
 */
 
-
 import java.util.Date;
+import java.io.Serializable;
 
-public class Transaction {
+public class Transaction implements Serializable {
     // Attributes
+    private static final long serialVersionUID = 3L;
     private int transactionId;
     private int patronId;
     private int bookId;
