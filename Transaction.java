@@ -9,6 +9,7 @@ Description : This class will be used to manipulate transactions in the library 
 import java.util.Date;
 
 public class Transaction {
+    // Attributes
     private int transactionId;
     private int patronId;
     private int bookId;
@@ -18,33 +19,33 @@ public class Transaction {
     public Transaction() {}
 
     // constructor
-    public Transaction(int transactionID, int patronId, int bookId, Date transactionDate) {
-        this.transactionID = transactionID;
+    public Transaction(int transactionId, int patronId, int bookId, Date transactionDate) {
+        this.transactionId = transactionId;
         this.patronId = patronId;
         this.bookId = bookId;
         this.transactionDate = transactionDate;
     }
 
-    // Getter methods
+    // getter methods
     public int getTransactionID() {
-        return transactionID;
+        return transactionId;
     }
 
     public Date getTransactionDate() {
         return transactionDate;
     }
 
-    public int getPatronId() {
+    public int getPatronID() {
         return patronId;
     }
 
-    public int getBookId() {
+    public int getBookID() {
         return bookId;
     }
 
     // setter methods
-    public void setTransactionID(int transactionID) {
-        this.transactionID = transactionID;
+    public void setTransactionId(int transactionId) {
+        this.transactionId = transactionId;
     }
 
     public void setPatronId(int patronId) {
