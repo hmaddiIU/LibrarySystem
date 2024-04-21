@@ -77,7 +77,9 @@ public class LibrarySystem extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        
+        // attempting to load data here
+        // ---> load the data from the database here <----
+
         this.primaryStage = primaryStage;
         primaryStage.setTitle("Library System");
 
@@ -116,9 +118,21 @@ public class LibrarySystem extends Application {
         exitMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.X, KeyCombination.CONTROL_DOWN));
         patronsMenu.getItems().addAll(createPatronItem, findPatronItem, editPatronItem, deletePatronItem,
                 new SeparatorMenuItem(), exitMenuItem);
-
         // exit action
         exitMenuItem.setOnAction(actionEvent -> {
+            // save data to local serializer before exit
+            System.out.println("Attempting to save data...");
+
+            // only save if user made changes
+            if (patrons.size() > 0)
+                saveRecords(patronsDatabasePath, patrons);
+
+            if (books.size() > 0)
+                saveRecords(booksDatabasePath, books);
+
+            if (patrons.size() > 0)
+                saveRecords(transactionsDatabasePath, transactions);
+
             Platform.exit();
         });
 
@@ -296,6 +310,24 @@ public class LibrarySystem extends Application {
         page.getChildren().addAll(label, about);
 
         return page;
+    }
+
+    // save the records into the database
+    // this method is using the generic type T to accomodate the different classes we have (Patron, Book and transaction)
+    @SuppressWarnings("unchecked")
+    private <T> void saveRecords(String dbPath, ArrayList<T> records) {
+        int recordCount = 0;
+        try (FileOutputStream fileOut = new FileOutputStream(dbPath);
+             ObjectOutputStream objectOut = new ObjectOutputStream(fileOut)) {
+
+            for (T record : records) {
+                objectOut.writeObject(record);
+                recordCount++;
+            }
+            System.out.println("Data saved successfully to " + dbPath);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public static void main(String[] args) {
