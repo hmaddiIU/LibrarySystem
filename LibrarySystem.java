@@ -3,10 +3,17 @@ Project     : Library System
 Author      : Hamid Maddi
 Created on  : 04/01/2024
 Updated by  : Hamid Mddi
-Updated on  : 04/21/24
+Updated on  : 04/25/24
 Description : This is the Patron Class for the Library System.
 */
 
+import javafx.application.Application;
+import javafx.application.Platform;
+import javafx.geometry.Insets;
+import javafx.stage.Stage;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.beans.property.SimpleStringProperty;
 import java.io.Serializable;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -15,20 +22,15 @@ import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.ObjectInputStream;
 import java.io.EOFException;
-
 import java.util.Optional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.regex.Pattern;
+import java.text.DecimalFormat;
 
-import javafx.application.Application;
-import javafx.application.Platform;
-import javafx.geometry.Insets;
-import javafx.stage.Stage;
 import javafx.scene.Scene;
-
 import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
@@ -47,7 +49,6 @@ import javafx.scene.control.Separator;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.Alert;
-
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
@@ -59,12 +60,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.GridPane;
 import javafx.scene.control.TableColumn;
 import javafx.scene.paint.Color;
-
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-
-import javafx.beans.property.SimpleStringProperty;
-import java.text.DecimalFormat;
 
 public class LibrarySystem extends Application {
 
