@@ -2,6 +2,17 @@
 
 ## Library System Classes
 
+## Compiling and running the application
+Before running the program, you must first ensure that you have the appropriate software (javaFx) installed.
+- Download and configure javaFx<br>
+https://openjfx.io/openjfx-docs/#install-javafx
+- Compile the application<br>
+javac --module-path $PATH_TO_FX --add-modules javafx.controls,javafx.fxml Patron.java Book.java Transaction.java LibrarySystem.java
+- Run the application<br>
+java --module-path $PATH_TO_FX --add-modules javafx.controls,javafx.fxml LibrarySystem.java
+
+
+
 ## Class Diagram
 [Librasy System Class Diagram](/Library%20Systen%20Class%20Diagram.pdf)
 
