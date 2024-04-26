@@ -3,7 +3,7 @@ Project     : Library System
 Author      : Hamid Maddi
 Created on  : 04/01/2024
 Updated by  : Hamid Mddi
-Updated on  : 04/25/24
+Updated on  : 04/26/24
 Description : This is the Patron Class for the Library System.
 */
 
@@ -22,6 +22,8 @@ import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.ObjectInputStream;
 import java.io.EOFException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Optional;
 import java.util.ArrayList;
 import java.util.List;
@@ -66,7 +68,7 @@ public class LibrarySystem extends Application {
     private Stage primaryStage;
     private BorderPane root;
 
-     // patrons, books and transactions lists
+    // patrons, books and transactions lists
     private ArrayList<Patron> patrons = new ArrayList<>();
     private ArrayList<Book> books = new ArrayList<>();
     private ArrayList<Transaction> transactions = new ArrayList<>();
@@ -78,8 +80,16 @@ public class LibrarySystem extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        // attempting to load data here
-        // ---> load the data from the database here <----
+        // attempting to load patrons data here
+        loadRecords(patronsDatabasePath, patrons);
+
+        // this section needs to be enabled
+        // attempting to load transactions data here
+        // loadRecords(transactionsDatabasePath, transactions);
+
+        // this section needs to be enabled
+        // attempting to load books data here
+        // loadRecords(booksDatabasePath, books);
 
         this.primaryStage = primaryStage;
         primaryStage.setTitle("Library System");
@@ -88,7 +98,7 @@ public class LibrarySystem extends Application {
         root.setTop(createMenuBar());
         root.setCenter(landingPage());
 
-        Scene scene = new Scene(root, 600, 400);
+        Scene scene = new Scene(root, 520, 400);
         primaryStage.setScene(scene);
         primaryStage.show();
     }
@@ -124,15 +134,18 @@ public class LibrarySystem extends Application {
             // save data to local serializer before exit
             System.out.println("Attempting to save data...");
 
+            // save records whern users exit the application
             // only save if user made changes
             if (!patrons.isEmpty())
                 saveRecords(patronsDatabasePath, patrons);
 
-            if (!books.isEmpty())
-                saveRecords(booksDatabasePath, books);
+            // this section needs to be enabled
+            // if (!books.isEmpty())
+            //     saveRecords(booksDatabasePath, books);
 
-            if (!patrons.isEmpty())
-                saveRecords(transactionsDatabasePath, transactions);
+            // this section needs to be enabled
+            // if (!patrons.isEmpty())
+            //     saveRecords(transactionsDatabasePath, transactions);
 
             Platform.exit();
         });
@@ -282,7 +295,7 @@ public class LibrarySystem extends Application {
 
         GridPane.setConstraints(nameField, 1, 0);
         TextField phoneField = new TextField();
-        phoneField.setPromptText("Enter the phone number");
+        phoneField.setPromptText("Enter the phone number (10 digits)");
         GridPane.setConstraints(phoneField, 1, 1);
 
         TextField emailField = new TextField();
@@ -307,10 +320,22 @@ public class LibrarySystem extends Application {
                 errorLabel.setText("Invalid email format");
             } else {
                 // Handle form submission here
-                System.out.println("Name: " + nameField.getText());
-                System.out.println("Phone: " + phoneField.getText());
-                System.out.println("Email: " + emailField.getText());
+                Patron patron = new Patron(generateID(), nameField.getText(), phoneField.getText(), emailField.getText());
+                patrons.add(patron);
+                // clear all fields. If I have time I will revisit this duplicate code.
+                errorLabel.setText("");
+                nameField.setText("");
+                phoneField.setText("");
+                emailField.setText("");
             }
+        });
+
+        // Event handling for Create button
+        cancelButton.setOnAction(e -> {
+            errorLabel.setText("");
+            nameField.setText("");
+            phoneField.setText("");
+            emailField.setText("");
         });
 
         // Add all elements to grid
@@ -329,8 +354,14 @@ public class LibrarySystem extends Application {
 
         // Create dropdown to select patrons
         ComboBox<String> patronsDropdown = new ComboBox<>();
-        patronsDropdown.setPrefWidth(210);
-        patronsDropdown.getItems().addAll("Patron 1", "Patron 2", "Patron 3");
+        patronsDropdown.setPrefWidth(213);
+
+        // load patron names into the dropdown
+        if (!patrons.isEmpty()) {
+            for (Patron patron : patrons) {
+                patronsDropdown.getItems().add(patron.getName());
+            }
+        }
 
         // patron comboBox title
         Label patronComboBoxLabel = new Label("Select a patron");
@@ -360,7 +391,7 @@ public class LibrarySystem extends Application {
         // TextFields
         TextField nameField = new TextField();
         nameField.setPromptText("Name");
-        nameField.setPrefWidth(250);
+        nameField.setPrefWidth(270);
         GridPane.setConstraints(nameField, 1, 0);
 
         TextField phoneField = new TextField();
@@ -373,10 +404,18 @@ public class LibrarySystem extends Application {
 
         // Add action to ComboBox
         patronsDropdown.setOnAction(event -> {
-            String selectedOption = patronsDropdown.getSelectionModel().getSelectedItem();
-            nameField.setText("name " + selectedOption);
-            phoneField.setText("phone " + selectedOption);
-            emailField.setText("email " + selectedOption);
+            String selectedPatron = patronsDropdown.getSelectionModel().getSelectedItem();
+            // Using lambda expression to find the item by name
+            Optional<Patron> foundPatron = patrons.stream()
+                .filter(patron -> patron.getName().equals(selectedPatron))
+                .findFirst();
+
+            // If the item is found, print its name
+            foundPatron.ifPresent(patron -> {
+                nameField.setText(patron.getName());
+                phoneField.setText(patron.getPhone());
+                emailField.setText(patron.getEmail());
+            });
         });
 
         page.setMargin(patronsDropdown, new Insets(20));
@@ -407,13 +446,14 @@ public class LibrarySystem extends Application {
 
         // Create dropdown to select patrons
         ComboBox<String> patronsDropdown = new ComboBox<>();
-        patronsDropdown.setPrefWidth(210);
-        patronsDropdown.getItems().addAll("Patron 1", "Patron 2", "Patron 3");
-        // Add action to ComboBox
-        patronsDropdown.setOnAction(event -> {
-            String selectedOption = patronsDropdown.getSelectionModel().getSelectedItem();
-            System.out.println("Selected option: " + selectedOption);
-        });
+        patronsDropdown.setPrefWidth(213);
+       
+        // load patron names into the dropdown
+        if (!patrons.isEmpty()) {
+            for (Patron patron : patrons) {
+                patronsDropdown.getItems().add(patron.getName());
+            }
+        }
 
         // patron comboBox title
         Label patronComboBoxLabel = new Label("Select a patron");
@@ -453,6 +493,26 @@ public class LibrarySystem extends Application {
         Button saveButton = new Button("Save");
         GridPane.setConstraints(saveButton, 0, 4);
 
+        // Add action to ComboBox
+        patronsDropdown.setOnAction(event -> {
+            // clear error
+            errorLabel.setText("");
+
+            String selectedPatron = patronsDropdown.getSelectionModel().getSelectedItem();
+        
+            // Using lambda expression to find the item by name
+            Optional<Patron> foundPatron = patrons.stream()
+                .filter(patron -> patron.getName().equals(selectedPatron))
+                .findFirst();
+
+            // If the item is found, print its name
+            foundPatron.ifPresent(patron -> {
+                nameField.setText(patron.getName());
+                phoneField.setText(patron.getPhone());
+                emailField.setText(patron.getEmail());
+            });
+        });
+
         // Event handling for Create button
         saveButton.setOnAction(e -> {
             // clear error
@@ -460,7 +520,7 @@ public class LibrarySystem extends Application {
 
             // validate that the fields have data before saving
             if (patronsDropdown.getValue() == null || patronsDropdown.getValue().isEmpty()) {
-                errorLabel.setText("Select the patron you want to update!");
+                errorLabel.setText("Select the patron you want to edit!");
             } else if (nameField.getText().isEmpty() || phoneField.getText().isEmpty() || emailField.getText().isEmpty()) {
                 errorLabel.setText("All fields are mandatory");
             } else if (!isValidPhone(phoneField.getText())) {
@@ -468,10 +528,37 @@ public class LibrarySystem extends Application {
             } else if (!isValidEmail(emailField.getText())) {
                 errorLabel.setText("Invalid email format");
             } else {
-                // Handle form submission here
-                System.out.println("Name: " + nameField.getText());
-                System.out.println("Phone: " + phoneField.getText());
-                System.out.println("Email: " + emailField.getText());
+                // Handle save here
+                // Using lambda expression to find the item by name
+                Optional<Patron> foundPatron = patrons.stream()
+                    .filter(patron -> patron.getName().equals(patronsDropdown.getValue()))
+                    .findFirst();
+
+                // If the item is found, print its name
+                foundPatron.ifPresent(patron -> {
+                    patron.setName(nameField.getText());
+                    patron.setPhone(phoneField.getText());
+                    patron.setEmail(emailField.getText());
+
+                    // Create an alert
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle("Edit patron");
+                    alert.setContentText("Patron information updated successfully!");
+                    // Show the alert and keep it open
+                    alert.showAndWait();
+
+                    // clear all items
+                    patronsDropdown.getItems().clear();
+                    // load patron names into the dropdown
+                    if (!patrons.isEmpty()) {
+                        for (Patron ptrn : patrons) {
+                            patronsDropdown.getItems().add(ptrn.getName());
+                        }
+                    }
+                    nameField.setText("");
+                    phoneField.setText("");
+                    emailField.setText("");
+                });
             }
         });
 
@@ -499,8 +586,13 @@ public class LibrarySystem extends Application {
         // Create label and combobox
         Label comboBoxLabel = new Label("Select a patron");
         ComboBox<String> patronsDropdown = new ComboBox<>();
-        patronsDropdown.getItems().addAll("Option 1", "Option 2", "Option 3");
-        patronsDropdown.setPrefWidth(210);
+         // load patron names into the dropdown
+        if (!patrons.isEmpty()) {
+            for (Patron patron : patrons) {
+                patronsDropdown.getItems().add(patron.getName());
+            }
+        }
+        patronsDropdown.setPrefWidth(215);
         
         // Create HBox for label and combobox
         HBox labelComboBoxHBox = new HBox(20); // 10 is spacing between label and combobox
@@ -522,13 +614,14 @@ public class LibrarySystem extends Application {
             // clear error
             errorLabel.setText("");
             // validate that patron is selected before deleting
-            if (patronsDropdown.getValue() == null || patronsDropdown.getValue().isEmpty()) {
+            String selectedPatron = patronsDropdown.getValue();
+            if (selectedPatron == null || selectedPatron.isEmpty()) {
                 errorLabel.setText("Select the patron to delete!");
             } else {
                 // Show confirmation dialog
                 Alert confirmationAlert = new Alert(Alert.AlertType.CONFIRMATION);
                 confirmationAlert.setTitle("Confirmation");
-                confirmationAlert.setHeaderText("Are you sure you want to remove the account " + patronsDropdown.getValue() + " ?");
+                confirmationAlert.setHeaderText("Are you sure you want to delete the patron " + patronsDropdown.getValue() + "?");
 
                 // Adding Yes and No buttons to the confirmation alert
                 confirmationAlert.getButtonTypes().setAll(ButtonType.YES, ButtonType.NO);
@@ -538,8 +631,9 @@ public class LibrarySystem extends Application {
                 
                 // Check the user's response
                 if (result.isPresent() && result.get() == ButtonType.YES) {
-                       System.out.println("perform delete");
-    
+                    Patron patron = findPatron(selectedPatron);
+                    patrons.remove(patron);
+                    patronsDropdown.getItems().remove(selectedPatron);
                 }
             }
         });
@@ -568,10 +662,12 @@ public class LibrarySystem extends Application {
     }
 
     // save the records into the database
-    // this method is using the generic type T to accomodate the different classes we have (Patron, Book and transaction)
+    // this method is using the generic type T to accomodate the 
+    // different classes we have (Patron, Book and Transaction)
     @SuppressWarnings("unchecked")
-    private <T> void saveRecords(String dbPath, ArrayList<T> records) {
+    private static <T> void saveRecords(String dbPath, ArrayList<T> records) {
         int recordCount = 0;
+       
         try (FileOutputStream fileOut = new FileOutputStream(dbPath);
              ObjectOutputStream objectOut = new ObjectOutputStream(fileOut)) {
 
@@ -579,10 +675,51 @@ public class LibrarySystem extends Application {
                 objectOut.writeObject(record);
                 recordCount++;
             }
-            System.out.println("Data saved successfully to " + dbPath);
+            System.out.println("Successfully saved " + recordCount + " records to " + dbPath);
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    // read the records from the database into the respective list
+    // this method is using the generic type T to accomodate the 
+    // different classes we have (Patron, Book and Transaction)
+    @SuppressWarnings("unchecked")
+    private static <T> void loadRecords(String dbPath, ArrayList<T> records) {
+        int recordCount = 0;
+        
+        // we load data only if db file is found
+        File file = new File(dbPath);
+
+        if (file.exists()) {
+            try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(dbPath))) {
+                // Read objects until the end of the file
+                while (true) {
+                    try {
+                        T record = (T) ois.readObject();
+                        records.add(record);
+                        recordCount++;
+                    } catch (EOFException eof) {
+                        break; // End of file reached
+                    }
+                }
+                
+                System.out.println("Successfully loaded " + recordCount + " records from " + dbPath);
+            } catch (IOException | ClassNotFoundException e) {
+                    e.printStackTrace();
+            }
+        } else {
+        System.out.println("No Database found for " + dbPath);
+        }
+    }
+
+    private Patron findPatron(String name) {
+        for (Patron patron: patrons) {
+            if (patron.getName() == name) {
+                return patron;
+            }
+        }
+        return null;
     }
 
     // Email validation method
@@ -595,6 +732,12 @@ public class LibrarySystem extends Application {
     private boolean isValidPhone(String phone) {
         // 10 digit phone format validation
         return phone.matches("\\d{10}");
+    }
+
+     public long generateID() {
+        Date currentDate = new Date(); // Current date and time
+        long dateEpoch = currentDate.getTime();
+        return dateEpoch;
     }
 
     public static void main(String[] args) {

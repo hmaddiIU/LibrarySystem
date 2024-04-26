@@ -12,7 +12,7 @@ import java.io.Serializable;
 public class Patron implements Serializable {
 	// Attributes
 	private static final long serialVersionUID = 1L;
-	private int patronID;
+	private long patronID;
 	private String name;
 	private String phone;
 	private String email;
@@ -21,7 +21,7 @@ public class Patron implements Serializable {
 	public  Patron() {}
 
 	// constructor
-	public Patron(int patronID, String name, String phone, String email) {
+	public Patron(long patronID, String name, String phone, String email) {
 		this.patronID = patronID;
 		this.name = name;
 		this.phone = phone;
@@ -29,7 +29,7 @@ public class Patron implements Serializable {
 	}
 
 	// getter methods
-	public int getPatronID() {
+	public long getPatronID() {
 		return patronID;
 	}
 
@@ -46,7 +46,7 @@ public class Patron implements Serializable {
 	}
 
 	// setters methods
-	public void setPatronID(int patronID) {
+	public void setPatronID(long patronID) {
 		this.patronID = patronID;
 	}
 
