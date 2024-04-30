@@ -11,6 +11,19 @@ javac --module-path $PATH_TO_FX --add-modules javafx.controls,javafx.fxml Patron
 - Run the application<br>
 java --module-path $PATH_TO_FX --add-modules javafx.controls,javafx.fxml LibrarySystem.java
 
+## User Documentation
+
+### Patrons
+[patrons](./patrons.md)
+Guidence on how to create, edit, find or delete patrons
+
+### Catalog
+[catalog](./catalog.md)
+Guidence on how to add, remove or search for a book.
+
+### Reports
+[Rebake](./reports.md)
+Guidance on how to generate various reports.
 
 
 ## Class Diagram

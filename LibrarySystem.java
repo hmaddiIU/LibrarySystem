@@ -3,7 +3,7 @@ Project     : Library System
 Author      : Hamid Maddi
 Created on  : 04/01/2024
 Updated by  : Hamid Mddi
-Updated on  : 04/26/24
+Updated on  : 04/29/24
 Description : This is the Patron Class for the Library System.
 */
 
@@ -63,6 +63,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.control.TableColumn;
 import javafx.scene.paint.Color;
 
+
 public class LibrarySystem extends Application {
 
     private Stage primaryStage;
@@ -78,9 +79,13 @@ public class LibrarySystem extends Application {
     private String booksDatabasePath = "books.ser";
     private String transactionsDatabasePath = "transactions.ser";
 
+    /* 
+        author      : Hamid Maddi
+        description : This method is the starting point for the app 
+    */
     @Override
     public void start(Stage primaryStage) {
-        // attempting to load patrons data here
+        // load patrons data on app start
         loadRecords(patronsDatabasePath, patrons);
 
         // this section needs to be enabled
@@ -103,6 +108,10 @@ public class LibrarySystem extends Application {
         primaryStage.show();
     }
 
+    /* 
+        author      : Hamid Maddi
+        description : This method generates the menu bar
+    */
     private MenuBar createMenuBar() {
         MenuBar menuBar = new MenuBar();
 
@@ -191,8 +200,13 @@ public class LibrarySystem extends Application {
         return menuBar;
     }
 
+    /* 
+        author      : Hamid Maddi
+        description : This is the landing page, it is the firstpage the user sees.
+    */
     private VBox landingPage() {
         VBox page = new VBox();
+
         Label label = new Label("Library System");
         label.setFont(new Font("Arial", 25));
         label.setTextFill(Color.web("#A9A9A9"));
@@ -202,8 +216,13 @@ public class LibrarySystem extends Application {
         return page;
     }
 
+    /* 
+        author      : Hamid Maddi
+        description : This is placeholder for the reports page
+    */
     private VBox patronsReportPage() {
         VBox page = new VBox();
+
         Label label = new Label("Patrons");
         label.setFont(new Font("Arial", 15));
         label.setTextFill(Color.web("#A9A9A9"));
@@ -214,8 +233,13 @@ public class LibrarySystem extends Application {
         return page;
     }
 
+    /* 
+        author      : Hamid Maddi
+        description : This is placeholder for checking out books page
+    */
     private VBox checkedOutBooksReportPage() {
         VBox page = new VBox();
+
         Label label = new Label("Checked out books");
         label.setFont(new Font("Arial", 15));
         label.setTextFill(Color.web("#A9A9A9"));
@@ -226,8 +250,13 @@ public class LibrarySystem extends Application {
         return page;
     }
 
+    /* 
+        author      : Hamid Maddi
+        description : This is placeholder for search book page
+    */
     private VBox searchBookPage() {
         VBox page = new VBox();
+
         Label label = new Label("Search book");
         label.setFont(new Font("Arial", 15));
         label.setTextFill(Color.web("#A9A9A9"));
@@ -238,8 +267,13 @@ public class LibrarySystem extends Application {
         return page;
     }
 
+    /* 
+        author      : Hamid Maddi
+        description : This is placeholder for add a book page
+    */
     private VBox addBookPage() {
         VBox page = new VBox();
+
         Label label = new Label("Add book");
         label.setFont(new Font("Arial", 15));
         label.setTextFill(Color.web("#A9A9A9"));
@@ -250,8 +284,13 @@ public class LibrarySystem extends Application {
         return page;
     }
 
+    /* 
+        author      : Hamid Maddi
+        description : This is placeholder for remove book page
+    */
     private VBox removeBookPage() {
         VBox page = new VBox();
+
         Label label = new Label("Remove book");
         label.setFont(new Font("Arial", 15));
         label.setTextFill(Color.web("#A9A9A9"));
@@ -262,8 +301,13 @@ public class LibrarySystem extends Application {
         return page;
     }
 
+    /* 
+        author      : Hamid Maddi
+        description : This method is to create a patron
+    */
     private VBox createPatronPage() {
         VBox page = new VBox();
+
         Label label = new Label("Create Patron");
         label.setFont(new Font("Arial", 22));
         label.setPadding(new Insets(20,20,0,20));
@@ -345,6 +389,10 @@ public class LibrarySystem extends Application {
         return page;
     }
 
+    /* 
+        author      : Hamid Maddi
+        description : This method is for the find patron page
+    */
     private VBox findPatronPage() {
         VBox page = new VBox();
 
@@ -403,6 +451,7 @@ public class LibrarySystem extends Application {
         GridPane.setConstraints(emailField, 1, 2);
 
         // Add action to ComboBox
+        // this listener is called every time a user changes a selection
         patronsDropdown.setOnAction(event -> {
             String selectedPatron = patronsDropdown.getSelectionModel().getSelectedItem();
             // Using lambda expression to find the item by name
@@ -426,6 +475,10 @@ public class LibrarySystem extends Application {
         return page;
     }
 
+    /* 
+        author      : Hamid Maddi
+        description : This is the method to edit a patron
+    */
     private VBox editPatronPage() {
         VBox page = new VBox();
 
@@ -528,11 +581,13 @@ public class LibrarySystem extends Application {
             } else if (!isValidEmail(emailField.getText())) {
                 errorLabel.setText("Invalid email format");
             } else {
-                // Handle save here
+                // Handle the save action
                 // Using lambda expression to find the item by name
                 Optional<Patron> foundPatron = patrons.stream()
-                    .filter(patron -> patron.getName().equals(patronsDropdown.getValue()))
-                    .findFirst();
+                    .filter(patron -> patron
+                        .getName()
+                        .equals(patronsDropdown.getValue())
+                    ).findFirst();
 
                 // If the item is found, print its name
                 foundPatron.ifPresent(patron -> {
@@ -555,6 +610,7 @@ public class LibrarySystem extends Application {
                             patronsDropdown.getItems().add(ptrn.getName());
                         }
                     }
+                    // clear the fields
                     nameField.setText("");
                     phoneField.setText("");
                     emailField.setText("");
@@ -562,7 +618,6 @@ public class LibrarySystem extends Application {
             }
         });
 
-      
         page.setMargin(patronsDropdown, new Insets(20));
         // Add all elements to grid
         grid.getChildren().addAll(nameLabel, phoneLabel, emailLabel, nameField, phoneField, emailField, errorLabel, saveButton);
@@ -571,6 +626,10 @@ public class LibrarySystem extends Application {
         return page;
     }
     
+    /* 
+        author      : Hamid Maddi
+        description : This is the delete patron method
+    */
     private VBox deletePatronPage() {
         VBox page = new VBox();
 
@@ -602,7 +661,6 @@ public class LibrarySystem extends Application {
         // error label
         Label errorLabel = new Label("");
         errorLabel.setTextFill(Color.RED);
-        // GridPane.setColumnSpan(errorLabel, 2);
         GridPane.setConstraints(errorLabel, 0, 1);
 
         // Create button
@@ -645,8 +703,13 @@ public class LibrarySystem extends Application {
         return page;
     }
 
+    /* 
+        author      : Hamid Maddi
+        description : This method is for the about page
+    */
     private VBox aboutPage() {
         VBox page = new VBox();
+
         Label label = new Label("About");
         label.setFont(new Font("Arial", 15));
         label.setTextFill(Color.web("#A9A9A9"));
@@ -661,16 +724,20 @@ public class LibrarySystem extends Application {
         return page;
     }
 
-    // save the records into the database
-    // this method is using the generic type T to accomodate the 
-    // different classes we have (Patron, Book and Transaction)
+    
+    /* 
+        author      : Hamid Maddi
+        description : This is the save records method, it is used to save the records 
+                      into the database. This method is using the generic type T to 
+                      accomodate the different classes we have (Patron, Book and Transaction)
+    */
     @SuppressWarnings("unchecked")
     private static <T> void saveRecords(String dbPath, ArrayList<T> records) {
         int recordCount = 0;
        
         try (FileOutputStream fileOut = new FileOutputStream(dbPath);
-             ObjectOutputStream objectOut = new ObjectOutputStream(fileOut)) {
-
+            ObjectOutputStream objectOut = new ObjectOutputStream(fileOut)) {
+            // loop through all records
             for (T record : records) {
                 objectOut.writeObject(record);
                 recordCount++;
@@ -681,9 +748,12 @@ public class LibrarySystem extends Application {
         }
     }
 
-    // read the records from the database into the respective list
-    // this method is using the generic type T to accomodate the 
-    // different classes we have (Patron, Book and Transaction)
+    /* 
+        author      : Hamid Maddi
+        description : This is the read records method, it is used to load the records 
+                      from the database. This method is using the generic type T to 
+                      accomodate the different classes we have (Patron, Book and Transaction)
+    */
     @SuppressWarnings("unchecked")
     private static <T> void loadRecords(String dbPath, ArrayList<T> records) {
         int recordCount = 0;
@@ -700,7 +770,7 @@ public class LibrarySystem extends Application {
                         records.add(record);
                         recordCount++;
                     } catch (EOFException eof) {
-                        break; // End of file reached
+                        break;
                     }
                 }
                 
@@ -722,24 +792,35 @@ public class LibrarySystem extends Application {
         return null;
     }
 
-    // Email validation method
+     /* 
+        author      : Hamid Maddi
+        description : Email validtion method
+    */
     private boolean isValidEmail(String email) {
         // email format validation
         return email.matches("[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}");
     }
 
-    // phone validation method
+    /* 
+        author      : Hamid Maddi
+        description : Phone validtion method
+    */
     private boolean isValidPhone(String phone) {
         // 10 digit phone format validation
         return phone.matches("\\d{10}");
     }
 
-     public long generateID() {
+    /* 
+        author      : Hamid Maddi
+        description : This meth creates a record id based on timestamp.
+    */
+    public long generateID() {
         Date currentDate = new Date(); // Current date and time
         long dateEpoch = currentDate.getTime();
         return dateEpoch;
     }
 
+    
     public static void main(String[] args) {
         launch(args);
     }
