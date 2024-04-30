@@ -16,7 +16,7 @@ This document provides information about how to create, edit, find or delete pat
 
 - [Edit](#edit-patron)
 
-- [DELETE](#delete-patron)
+- [Delete](#delete-patron)
 
 
 ### Landing Page
