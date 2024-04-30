@@ -28,6 +28,10 @@ public class Catalog implements Serializable {
         saveBooks();
     }
 
+    public ArrayList<Book> getBooks() {
+        return books; 
+    }
+
     private void loadBooks() {
         try (ObjectInputStream in = new ObjectInputStream(new FileInputStream("books.ser"))) {
             books = (ArrayList<Book>) in.readObject();
