@@ -1,0 +1,68 @@
+import javafx.scene.control.*;
+import javafx.scene.layout.VBox;
+import javafx.geometry.Insets;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+
+public class CatalogGUI {
+    private Catalog catalog;
+
+    public CatalogGUI(Catalog catalog) {
+        this.catalog = catalog;
+    }
+
+    public VBox addBookPage() {
+        VBox vbox = new VBox(10);
+        vbox.setPadding(new Insets(10));
+        TextField isbnField = new TextField();
+        isbnField.setPromptText("Enter ISBN");
+        TextField titleField = new TextField();
+        titleField.setPromptText("Enter Title");
+        TextField authorField = new TextField();
+        authorField.setPromptText("Enter Author");
+        Button addButton = new Button("Add Book");
+        addButton.setOnAction(e -> {
+            Book newBook = new Book(catalog.getBooks().size() + 1, titleField.getText(), authorField.getText(), isbnField.getText(), true);
+            catalog.addBook(newBook);
+            isbnField.clear();
+            titleField.clear();
+            authorField.clear();
+        });
+        vbox.getChildren().addAll(new Label("Add New Book"), isbnField, titleField, authorField, addButton);
+        return vbox;
+    }
+
+    public VBox searchBookPage() {
+        VBox vbox = new VBox(10);
+        vbox.setPadding(new Insets(10));
+        TextField searchField = new TextField();
+        searchField.setPromptText("Search by ISBN, Title, or Author");
+        Button searchButton = new Button("Search");
+        ListView<String> resultList = new ListView<>();
+        searchButton.setOnAction(e -> {
+            List<Book> foundBooks = catalog.searchBook(searchField.getText());
+            ObservableList<String> items = FXCollections.observableArrayList();
+            foundBooks.forEach(book -> items.add(book.toString()));
+            resultList.setItems(items);
+            searchField.clear();
+        });
+        vbox.getChildren().addAll(new Label("Search Book"), searchField, searchButton, resultList);
+        return vbox;
+    }
+
+    public VBox removeBookPage() {
+        VBox vbox = new VBox(10);
+        vbox.setPadding(new Insets(10));
+        TextField bookIdField = new TextField();
+        bookIdField.setPromptText("Enter Book ID");
+        Button removeButton = new Button("Remove Book");
+        removeButton.setOnAction(e -> {
+            int bookId = Integer.parseInt(bookIdField.getText());
+            catalog.removeBook(bookId);
+            bookIdField.clear();
+        });
+        vbox.getChildren().addAll(new Label("Remove Book by ID"), bookIdField, removeButton);
+        return vbox;
+    }
+}
+
