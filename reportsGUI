@@ -1,0 +1,59 @@
+package application;
+
+
+
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.util.ArrayList;
+
+import javafx.application.Application;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
+
+public class ReportGUI extends Application {
+
+    @Override
+    public void start(Stage primaryStage) {
+        Button patronReportButton = new Button("Generate Patron Report");
+        Button bookReportButton = new Button("Generate Book Report");
+
+        patronReportButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+            	 try (ObjectInputStream out = new ObjectInputStream(new FileInputStream("patrons.ser"))) {
+     	            patrons = (ArrayList<Patron>) out.readObject();
+     	        } catch (IOException | ClassNotFoundException e) {
+     	            patrons = new ArrayList<>();
+            }
+        );
+
+        bookReportButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+            	try (ObjectInputStream out = new ObjectInputStream(new FileInputStream("books.ser"))) {
+    	            books = (ArrayList<Book>) out.readObject();
+    	        } catch (IOException | ClassNotFoundException e) {
+    	            books = new ArrayList<>();
+    	        }
+            }
+        });
+
+        VBox root = new VBox(10);
+        root.getChildren().addAll(patronReportButton, bookReportButton);
+
+        Scene scene = new Scene(root, 300, 200);
+
+        primaryStage.setTitle("Reports");
+        primaryStage.setScene(scene);
+        primaryStage.show();
+    }
+
+    public static void main(String[] args) {
+        launch(args);
+    }} 
+
