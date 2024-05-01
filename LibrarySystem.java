@@ -216,9 +216,42 @@ public class LibrarySystem extends Application {
         return page;
     }
 
-    /* 
-        author      : Hamid Maddi
-        description : This is placeholder for the reports page
+    //reports 
+           @Override
+    public void start(Stage primaryStage) {
+        Button patronReportButton = new Button("Generate Patron Report");
+        Button bookReportButton = new Button("Generate Book Report");
+
+        patronReportButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+            	 try (ObjectInputStream out = new ObjectInputStream(new FileInputStream("patrons.ser"))) {
+     	            patrons = (ArrayList<Patron>) out.readObject();
+     	        } catch (IOException | ClassNotFoundException e) {
+     	            patrons = new ArrayList<>();
+            }
+        );
+
+        bookReportButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+            	try (ObjectInputStream out = new ObjectInputStream(new FileInputStream("books.ser"))) {
+    	            books = (ArrayList<Book>) out.readObject();
+    	        } catch (IOException | ClassNotFoundException e) {
+    	            books = new ArrayList<>();
+    	        }
+            }
+        });
+
+        VBox root = new VBox(10);
+        root.getChildren().addAll(patronReportButton, bookReportButton);
+
+        Scene scene = new Scene(root, 300, 200);
+
+        primaryStage.setTitle("Reports");
+        primaryStage.setScene(scene);
+        primaryStage.show();
+    }
     */
     private VBox patronsReportPage() {
         VBox page = new VBox();
