@@ -6,7 +6,7 @@ Updated by  : Hamid Mddi
 Updated on  : 04/29/24
 Description : This is the Patron Class for the Library System.
 */
-
+import javafx.scene.control.ListView;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
@@ -251,53 +251,89 @@ public class LibrarySystem extends Application {
     }
 
     /* 
-        author      : Hamid Maddi
+        author      : Belmir Husejinovic
         description : This is placeholder for search book page
     */
     private VBox searchBookPage() {
-        VBox page = new VBox();
-
-        Label label = new Label("Search book");
+        Catalog catalog = new Catalog();
+        VBox page = new VBox(10);
+        page.setPadding(new Insets(10));
+        Label label = new Label("Search Book");
         label.setFont(new Font("Arial", 15));
-        label.setTextFill(Color.web("#A9A9A9"));
-        label.setPadding(new Insets(10));
-
-        page.getChildren().addAll(label);
-
+        TextField searchField = new TextField();
+        searchField.setPromptText("Enter ISBN, Title, or Author");
+        Button searchButton = new Button("Search");
+        ListView<String> resultsList = new ListView<>();
+        searchButton.setOnAction(e -> {
+            List<Book> results = catalog.searchBook(searchField.getText());
+            resultsList.getItems().clear();
+            results.forEach(book -> resultsList.getItems().add(book.toString()));
+            searchField.clear();
+        });
+        page.getChildren().addAll(label, searchField, searchButton, resultsList);
         return page;
     }
 
     /* 
-        author      : Hamid Maddi
+        author      : Belmir Husejinovic
         description : This is placeholder for add a book page
     */
     private VBox addBookPage() {
-        VBox page = new VBox();
-
-        Label label = new Label("Add book");
+        VBox page = new VBox(10);
+        page.setPadding(new Insets(10));
+        Label label = new Label("Add Book");
         label.setFont(new Font("Arial", 15));
-        label.setTextFill(Color.web("#A9A9A9"));
-        label.setPadding(new Insets(10));
 
-        page.getChildren().addAll(label);
+        TextField titleField = new TextField();
+        titleField.setPromptText("Enter Book Title");
+        TextField authorField = new TextField();
+        authorField.setPromptText("Enter Author Name");
+        TextField isbnField = new TextField();
+        isbnField.setPromptText("Enter ISBN");
+        Button addButton = new Button("Add Book");
 
+        Catalog catalog = new Catalog();
+
+        addButton.setOnAction(e -> {
+            int bookId = catalog.getBooks().size() + 1;
+            Book newBook = new Book(bookId, titleField.getText(), authorField.getText(), isbnField.getText(), true);
+            catalog.addBook(newBook);
+            titleField.clear();
+            authorField.clear();
+            isbnField.clear();
+        });
+
+        page.getChildren().addAll(label, titleField, authorField, isbnField, addButton);
         return page;
     }
 
     /* 
-        author      : Hamid Maddi
+        author      : Belmir Husejinovic
         description : This is placeholder for remove book page
     */
     private VBox removeBookPage() {
-        VBox page = new VBox();
+        VBox page = new VBox(10);
+        page.setPadding(new Insets(10));
 
-        Label label = new Label("Remove book");
+        Label label = new Label("Remove Book");
         label.setFont(new Font("Arial", 15));
-        label.setTextFill(Color.web("#A9A9A9"));
-        label.setPadding(new Insets(10));
 
-        page.getChildren().addAll(label);
+        TextField bookIdField = new TextField();
+        bookIdField.setPromptText("Enter Book ID");
 
+        Button removeButton = new Button("Remove Book");
+        Catalog catalog = new Catalog();
+        removeButton.setOnAction(e -> {
+            try {
+                int bookId = Integer.parseInt(bookIdField.getText());
+                catalog.removeBook(bookId);
+                bookIdField.clear();
+            } catch (NumberFormatException ex) {
+                bookIdField.setText("Invalid ID!");
+            }
+        });
+
+        page.getChildren().addAll(label, bookIdField, removeButton);
         return page;
     }
 
